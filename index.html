@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Samarth Mathur, PhD | Computational Biologist</title>
+  <meta name="description" content="Samarth Mathur, PhD — Bioinformatics Analyst at NCI/NIH. Research on cancer genomics, population genetics, and multi-omics analysis.">
+  <meta name="author" content="Samarth Mathur">
+  <meta name="theme-color" content="#2563eb">
+  <meta property="og:title" content="Samarth Mathur, PhD | Computational Biologist">
+  <meta property="og:description" content="Decoding the genetics of cancer, one genome at a time. Bioinformatics Analyst at NCI/NIH CCBR.">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="assets/favicons/favicon-32.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Canvas Background -->
+  <canvas id="bioCanvas"></canvas>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Dynamic Ticker -->
+  <div class="dna-ticker" id="dnaTicker">
+    <div class="dna-ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand">
+      <img src="assets/img/logo.png" alt="samarth logo" class="nav-logo-img">
+      <span class="nav-name">Samarth Mathur</span>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about" class="nav-link active" data-tab="about">About</a></li>
+      <li><a href="#publications" class="nav-link" data-tab="publications">Publications</a></li>
+      <li><a href="#projects" class="nav-link" data-tab="projects">Projects</a></li>
+      <li><a href="#awards" class="nav-link" data-tab="awards">Awards</a></li>
+      <li><a href="#blog" class="nav-link" data-tab="blog">Blog</a></li>
+      <li><a href="#contact" class="nav-link" data-tab="contact">Contact</a></li>
+      <li><a href="assets/docs/SamarthMathur_Resume.pdf" class="nav-link nav-cv" target="_blank">CV <i class="fas fa-arrow-down"></i></a></li>
+    </ul>
+    <div class="nav-controls">
+      <div class="speed-control" id="speedControl">
+        <button class="speed-toggle" id="speedToggle" aria-label="Animation speed"><i class="fas fa-tachometer-alt"></i></button>
+        <div class="speed-panel" id="speedPanel">
+          <input type="range" class="speed-slider" id="speedSlider" min="0" max="200" value="50" step="10">
+          <span class="speed-label" id="speedLabel">0.5x</span>
+        </div>
+      </div>
+      <button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ==================== ABOUT ==================== -->
+    <section class="tab-panel active" id="about">
+
+      <!-- Hero -->
+      <div class="hero anim">
+        <div class="hero-profile">
+          <div class="hero-photo-wrapper">
+            <img src="assets/img/avatar.jpg" alt="Samarth Mathur" class="hero-photo">
+          </div>
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Computational Biologist
+          </div>
+        </div>
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Decoding the genetics of cancer,
+            <span class="hero-title-accent">one genome at a time.</span>
+          </h1>
+          <p class="hero-subtitle">
+            I study the genomic underpinnings of cancer and endangered wildlife using multi-omics approaches at the <strong>Center for Cancer Research Collaborative Bioinformatics Resource (CCBR)</strong>, <strong>National Cancer Institute / NIH</strong>. My work spans whole-genome sequencing, RNA-seq, population genomics, and high-performance computing.
+          </p>
+          <div class="hero-links">
+            <a href="mailto:samarth8392@gmail.com" class="hero-link" title="Email"><i class="fas fa-envelope"></i></a>
+            <a href="https://www.linkedin.com/in/samarthmathurphd" target="_blank" class="hero-link" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://twitter.com/samarthphd" target="_blank" class="hero-link" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://github.com/samarth8392" target="_blank" class="hero-link" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://scholar.google.com/citations?user=kL0KaxQAAAAJ&hl=en" target="_blank" class="hero-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+            <a href="https://orcid.org/0000-0002-6446-5718" target="_blank" class="hero-link" title="ORCID"><i class="ai ai-orcid"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row anim">
+        <div class="stat-card" data-stat="pubs">
+          <span class="stat-value" id="statPubs">20+</span>
+          <span class="stat-label">Publications</span>
+        </div>
+        <div class="stat-card" data-stat="citations">
+          <span class="stat-value" id="statCitations">750+</span>
+          <span class="stat-label">Citations</span>
+        </div>
+        <div class="stat-card" data-stat="years">
+          <span class="stat-value" id="statYears">9+</span>
+          <span class="stat-label">Years Experience</span>
+        </div>
+        <div class="stat-card" data-stat="langs">
+          <span class="stat-value" id="statLangs">4</span>
+          <span class="stat-label">Coding Languages</span>
+        </div>
+      </div>
+
+      <!-- About DNA cards -->
+      <div class="about-grid">
+
+        <div class="dna-card anim expanded" data-expandable>
+          <div class="dna-card-header">
+            <span class="dna-strand-label" data-color="green"><i class="fas fa-flask"></i> Research</span>
+            <i class="fas fa-dna dna-header-icon"></i>
+            <span class="dna-strand-label" data-color="teal"><i class="fas fa-terminal"></i> Skills</span>
+            <i class="fas fa-chevron-up dna-card-toggle"></i>
+          </div>
+          <div class="dna-card-body">
+            <div class="dna-canvas-wrap">
+              <canvas id="dnaResearchSkills"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="dna-card anim expanded" data-expandable>
+          <div class="dna-card-header">
+            <span class="dna-strand-label" data-color="orange"><i class="fas fa-graduation-cap"></i> Education</span>
+            <i class="fas fa-dna dna-header-icon"></i>
+            <span class="dna-strand-label" data-color="purple"><i class="fas fa-briefcase"></i> Experience</span>
+            <i class="fas fa-chevron-up dna-card-toggle"></i>
+          </div>
+          <div class="dna-card-body">
+            <div class="dna-canvas-wrap">
+              <canvas id="dnaEducationExp"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Career Timeline -->
+      <div class="career-timeline anim" data-expandable>
+        <div class="career-timeline-header">
+          <div class="career-tl-title">
+            <i class="fas fa-stream"></i>
+            <span>Career Journey</span>
+          </div>
+          <i class="fas fa-chevron-up dna-card-toggle"></i>
+        </div>
+        <div class="career-timeline-body">
+          <div class="tl-track" id="careerTrack">
+            <div class="tl-axis"></div>
+            <!-- JS will populate entries -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== PUBLICATIONS ==================== -->
+    <section class="tab-panel" id="publications">
+      <div class="section-header anim">
+        <div>
+          <h2 class="section-title">Publications</h2>
+          <p class="section-sub">Via <a href="https://orcid.org/0000-0002-6446-5718" target="_blank">ORCID</a> &middot; Citations via <a href="https://scholar.google.com/citations?user=kL0KaxQAAAAJ&hl=en" target="_blank">Google Scholar</a></p>
+          <p class="cache-info" id="pubCacheInfo"></p>
+        </div>
+        <div class="pub-stats">
+          <span class="pill" id="pubCountBadge"><i class="fas fa-file-alt"></i> <span>--</span> papers</span>
+          <span class="pill" id="citCountBadge"><i class="fas fa-quote-right"></i> <span>--</span> citations</span>
+        </div>
+      </div>
+
+      <div class="pub-search-row">
+        <div class="pub-search-wrapper">
+          <i class="fas fa-search"></i>
+          <input type="text" class="pub-search" id="pubSearch" placeholder="Search publications...">
+        </div>
+      </div>
+      <div class="pub-filters" id="pubFilters"></div>
+      <div class="pub-keyword-filters" id="pubKeywords"></div>
+      <div class="pub-no-results" id="pubNoResults"><i class="fas fa-search"></i>No publications match your filters</div>
+
+      <div class="pub-loading" id="pubLoading">
+        <div class="loader"><span></span><span></span><span></span></div>
+        <p>Fetching publications...</p>
+      </div>
+
+      <div class="pub-layout" id="pubLayout" style="display:none;">
+        <div class="pub-list" id="pubList"></div>
+        <aside class="pub-sidebar" id="pubCharts">
+          <div class="pub-chart-card pub-chart-sticky">
+            <h4 class="pub-chart-title"><i class="fas fa-chart-bar"></i> Publications per year</h4>
+            <div class="pub-chart-bars" id="chartYearBars"></div>
+          </div>
+          <div class="pub-chart-card">
+            <h4 class="pub-chart-title"><i class="fas fa-tags"></i> Topic distribution</h4>
+            <div class="pub-chart-bars" id="chartTopicBars"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ==================== PROJECTS ==================== -->
+    <section class="tab-panel" id="projects">
+      <h2 class="section-title anim">Projects &amp; Code</h2>
+      <p class="section-sub anim"><a href="https://github.com/samarth8392" target="_blank">samarth8392</a> repositories &middot; <a href="https://github.com/ccbr" target="_blank">CCBR</a> pipelines</p>
+      <p class="cache-info" id="ghCacheInfo"></p>
+
+      <h3 class="subsection-label anim"><i class="fab fa-github"></i> GitHub Repositories</h3>
+      <div class="gh-loading" id="ghLoading">
+        <div class="loader"><span></span><span></span><span></span></div>
+        <p>Loading repositories...</p>
+      </div>
+      <div class="gh-filters" id="ghFilters" style="display:none;"></div>
+      <div class="gh-layout" id="ghLayout" style="display:none;">
+        <div class="gh-grid" id="ghGrid"></div>
+        <aside class="gh-sidebar" id="ghCharts">
+          <div class="pub-chart-card pub-chart-sticky">
+            <h4 class="pub-chart-title"><i class="fas fa-code"></i> Tech stack</h4>
+            <div class="pub-chart-bars" id="chartTechBars"></div>
+          </div>
+        </aside>
+      </div>
+
+      <h3 class="subsection-label anim" style="margin-top:3rem;"><i class="fas fa-dna"></i> Research Highlights</h3>
+      <div class="illustrations-grid">
+        <div class="illust-card anim">
+          <div class="illust-body">
+            <h3>Genetic Load in Small Populations</h3>
+            <p>Introduced the conceptual distinction between "potential" vs "realized" genetic load — featured in <em>Nature Reviews Genetics</em>. Published in <em>Evolution</em>, winner of SSE Presidents' Award 2024.</p>
+            <span class="illust-date"><i class="fas fa-calendar-alt"></i> 2023</span>
+          </div>
+        </div>
+        <div class="illust-card anim">
+          <div class="illust-body">
+            <h3>Neutral &amp; Functional Genomic Diversity</h3>
+            <p>Population genomic study of Eastern Massasauga rattlesnakes showing correlation between neutral and functional diversity. Published in <em>PNAS</em>.</p>
+            <span class="illust-date"><i class="fas fa-calendar-alt"></i> 2023</span>
+          </div>
+        </div>
+        <div class="illust-card anim">
+          <div class="illust-body">
+            <h3>Snake Fungal Disease Transcriptomics</h3>
+            <p>Multi-tissue RNA-seq study of host immune responses to <em>Ophidiomyces ophidiicola</em> in federally endangered rattlesnakes. Published in <em>Molecular Ecology</em>.</p>
+            <span class="illust-date"><i class="fas fa-calendar-alt"></i> 2024</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== AWARDS ==================== -->
+    <section class="tab-panel" id="awards">
+      <h2 class="section-title anim">Awards &amp; Honors</h2>
+      <p class="section-sub anim">Scientific recognition &amp; early career achievements</p>
+
+      <div class="contact-grid">
+
+        <div class="contact-card anim">
+          <div class="contact-icon"><i class="fas fa-trophy"></i></div>
+          <h3>SSE Presidents&rsquo; Award</h3>
+          <p>Outstanding dissertation publication in <em>Evolution</em></p>
+          <p><strong>Society for the Study of Evolution</strong> &mdash; 2024</p>
+        </div>
+
+        <div class="contact-card anim">
+          <div class="contact-icon"><i class="fas fa-award"></i></div>
+          <h3>NCI Director&rsquo;s Award</h3>
+          <p>Innovation in Translation Research</p>
+          <p><strong>National Cancer Institute / NIH</strong> &mdash; 2025</p>
+        </div>
+
+        <div class="contact-card anim">
+          <div class="contact-icon"><i class="fas fa-medal"></i></div>
+          <h3>Outstanding Scientific Publication</h3>
+          <p>High-impact publication advancing wildlife conservation &amp; management</p>
+          <p><strong>Texas Chapter of The Wildlife Society</strong> &mdash; 2025</p>
+        </div>
+
+        <div class="contact-card anim">
+          <div class="contact-icon"><i class="fas fa-star"></i></div>
+          <h3>Top Cited Author</h3>
+          <p>Mathur &amp; DeWoody (2021) — top-cited paper in <em>Evolutionary Applications</em></p>
+          <p><strong>John Wiley &amp; Sons</strong> &mdash; 2023</p>
+        </div>
+
+        <div class="contact-card anim">
+          <div class="contact-icon"><i class="fas fa-graduation-cap"></i></div>
+          <h3>Clarence Cottam Award — 1st Place</h3>
+          <p>Best graduate student paper</p>
+          <p><strong>Texas Chapter of The Wildlife Society</strong> &mdash; 2020</p>
+        </div>
+
+        <div class="contact-card anim">
+          <div class="contact-icon"><i class="fas fa-university"></i></div>
+          <h3>Outstanding Interdisciplinary Project</h3>
+          <p>Office of Interdisciplinary Graduate Programs</p>
+          <p><strong>Purdue University</strong> &mdash; 2020</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== BLOG ==================== -->
+    <section class="tab-panel" id="blog">
+      <h2 class="section-title anim">Blog</h2>
+      <p class="section-sub anim">News, updates &amp; thoughts</p>
+
+      <div class="blog-list" id="blogList">
+        <article class="blog-post anim">
+          <div class="blog-date">
+            <span class="blog-day">23</span>
+            <span class="blog-month">Mar 2026</span>
+          </div>
+          <div class="blog-content">
+            <span class="blog-category">Update</span>
+            <h3>Welcome to my new portfolio</h3>
+            <p>I've redesigned my personal website with a fresh, modern look. Here you'll find my publications, projects, and career journey. Stay tuned for updates on my research in cancer genomics, population genetics, and multi-omics bioinformatics at NCI/NIH.</p>
+          </div>
+        </article>
+        <article class="blog-post anim">
+          <div class="blog-date">
+            <span class="blog-day">01</span>
+            <span class="blog-month">Jan 2025</span>
+          </div>
+          <div class="blog-content">
+            <span class="blog-category">Award</span>
+            <h3>NCI Director&rsquo;s Award for Innovation in Translation Research</h3>
+            <p>Honored to receive the NCI Director's Award recognizing contributions to translational cancer research through bioinformatics and multi-omic data analysis at the Center for Cancer Research.</p>
+          </div>
+        </article>
+        <article class="blog-post anim">
+          <div class="blog-date">
+            <span class="blog-day">15</span>
+            <span class="blog-month">Jun 2024</span>
+          </div>
+          <div class="blog-content">
+            <span class="blog-category">Award</span>
+            <h3>SSE Presidents&rsquo; Award 2024</h3>
+            <p>Thrilled to have received the Society for the Study of Evolution's Presidents' Award for the most outstanding dissertation publication — recognizing work on genetic load and adaptive potential in small populations.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
+    <section class="tab-panel" id="contact">
+      <h2 class="section-title anim">Contact</h2>
+      <p class="section-sub anim">Get in touch</p>
+
+      <div class="contact-grid">
+        <div class="contact-card anim">
+          <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+          <h3>Email</h3>
+          <a href="mailto:samarth8392@gmail.com">samarth8392@gmail.com</a>
+        </div>
+        <div class="contact-card anim">
+          <div class="contact-icon"><i class="fas fa-building"></i></div>
+          <h3>Institution</h3>
+          <p>National Cancer Institute / NIH</p>
+          <p>CCBR &ndash; Center for Cancer Research</p>
+          <p>Frederick, MD, USA</p>
+        </div>
+        <div class="contact-card anim">
+          <div class="contact-icon"><i class="fas fa-share-alt"></i></div>
+          <h3>Profiles</h3>
+          <div class="contact-links">
+            <a href="https://www.linkedin.com/in/samarthmathurphd" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            <a href="https://twitter.com/samarthphd" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+            <a href="https://github.com/samarth8392" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://scholar.google.com/citations?user=kL0KaxQAAAAJ&hl=en" target="_blank"><i class="ai ai-google-scholar"></i> Google Scholar</a>
+            <a href="https://orcid.org/0000-0002-6446-5718" target="_blank"><i class="ai ai-orcid"></i> ORCID</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2026 Samarth Mathur, PhD &middot; NCI / NIH</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
