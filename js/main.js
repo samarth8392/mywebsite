@@ -1,7 +1,7 @@
 // ==================== CONFIG ====================
 const ORCID_ID = '0000-0002-6446-5718';
 const ORCID_API = `https://pub.orcid.org/v3.0/${ORCID_ID}/works`;
-const S2_API = 'https://api.semanticscholar.org/graph/v1/paper/DOI:';
+const OPENALEX_WORKS_API = 'https://api.openalex.org/works/';
 const CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
 
 // ==================== CACHE HELPERS ====================
@@ -88,9 +88,22 @@ document.addEventListener('DOMContentLoaded', () => {
   initPubFilters();
   initStatBubbles();
   initSpeedControl();
+  initCachedStatPlaceholders();
   fetchPublications();
   fetchGitHubRepos();
 });
+
+function initCachedStatPlaceholders() {
+  const cachedCitations = cacheGet('openalex_citations');
+  if (!cachedCitations) return;
+
+  const total = Object.values(cachedCitations).reduce((sum, count) => sum + (count || 0), 0);
+  statData.citations = total;
+  const citationEl = document.getElementById('statCitations');
+  if (citationEl && total > 0) {
+    citationEl.textContent = String(total);
+  }
+}
 
 // ==================== PAGE ENTRANCE SEQUENCE ====================
 function initPageEntrance() {
@@ -128,7 +141,7 @@ function observeAnimatedElements(container) {
 
 // ==================== TAB NAVIGATION ====================
 function initTabNavigation() {
-  const navLinks = document.querySelectorAll('.nav-link[data-tab]');
+  const navLinks = document.querySelectorAll('[data-tab]');
   const navToggle = document.getElementById('navToggle');
   const navMenu = document.getElementById('navLinks');
 
@@ -564,13 +577,13 @@ function initDNACards() {
         { label: 'R', title: 'R / RStudio', detail: 'Statistical modeling, population genetics, data visualization' },
         { label: 'Python', title: 'Python', detail: 'Pipeline development, bioinformatics tooling, data analysis' },
         { label: 'Bash', title: 'Bash / Shell', detail: 'Unix scripting, HPC job automation, cluster workflows' },
-        { label: 'Perl', title: 'Perl', detail: 'Legacy bioinformatics scripting and sequence manipulation' },
+        { label: 'HTML', title: 'HTML', detail: 'Semantic markup and responsive page structure for modern web interfaces' },
         { label: 'Nextflow', title: 'Nextflow / Snakemake', detail: 'Reproducible pipeline frameworks for NGS analysis' },
-        { label: 'HPC / AWS', title: 'HPC & Cloud Computing', detail: 'Slurm, PBS, AWS; large-scale genomics workflows' },
+        { label: 'High Performace Computing', title: 'HPC & Cloud Computing', detail: 'Slurm, PBS, AWS; large-scale genomics workflows' },
         { label: 'Docker/Conda', title: 'Docker / Conda', detail: 'Containerized reproducible bioinformatics environments' },
       ],
-      lightA: { r:74, g:158, b:109 },  lightB: { r:59, g:138, b:138 },
-      darkA:  { r:80, g:232, b:155 },  darkB:  { r:74, g:234, b:224 },
+      lightA: { r:217, g:119, b:87 },  lightB: { r:74, g:158, b:109 },
+      darkA:  { r:255, g:140, b:90 },  darkB:  { r:80, g:232, b:155 },
     },
     {
       canvasId: 'dnaEducationExp',
@@ -614,9 +627,9 @@ function initCareerTimeline() {
   const entries = [
     { type: 'edu', year: 2013, date: 'Jun 2013 – Jun 2015', title: 'BTech in Biotechnology', sub: 'IIT Roorkee', detail: 'Bioremediation, microbial genomics, antibiotic resistance; Institute Silver Medal for Best Project', icon: 'fa-seedling' },
     { type: 'exp', year: 2015, date: 'Aug 2015 – Dec 2020', title: 'Graduate Research Fellow', sub: 'Purdue University — Biological Sciences', detail: 'PhD: population genomics, genetic load, conservation genetics of Montezuma quail; Welder Wildlife Foundation Fellow', icon: 'fa-dna' },
+    { type: 'edu', year: 2020, date: 'Dec 2020', title: 'PhD in Biological Sciences', sub: 'Purdue University', detail: 'Dissertation: genetic load and adaptive potential in small isolated populations; SSE Presidents\' Award 2024', icon: 'fa-graduation-cap' },
     { type: 'exp', year: 2021, date: 'Jan 2021 – Feb 2023', title: 'Postdoctoral Research Scholar', sub: 'The Ohio State University — EEOB', detail: 'Host immune responses to snake fungal disease; neutral vs functional genomic diversity in Eastern Massasauga rattlesnakes', icon: 'fa-microscope' },
     { type: 'exp', year: 2023, date: 'Mar 2023 – Present', title: 'Bioinformatics Analyst II', sub: 'NCI / NIH — CCBR', detail: 'Multi-omic cancer genomics pipelines; NGS analysis supporting investigators across NIH intramural cancer research', icon: 'fa-flask-vial', active: true },
-    { type: 'edu', year: 2020, date: 'Dec 2020', title: 'PhD in Biological Sciences', sub: 'Purdue University', detail: 'Dissertation: genetic load and adaptive potential in small isolated populations; SSE Presidents\' Award 2024', icon: 'fa-graduation-cap' },
   ];
 
   // Build 3 flex rows: above (cards for edu, years for exp), dots, below (cards for exp, years for edu)
@@ -1126,7 +1139,7 @@ function createDNAHelix(cfg) {
   }
 }
 
-// ==================== ORCID + SEMANTIC SCHOLAR ====================
+// ==================== ORCID + OPENALEX ====================
 function parseOrcidWorks(groups) {
   const pubs = groups.map(g => {
     const s = g['work-summary'][0];
@@ -1172,8 +1185,8 @@ function buildBubbleHTML(type) {
   }
   if (type === 'citations') {
     return `<div class="stat-bubble-title"><i class="fas fa-quote-right"></i> Citations</div>
-            <div class="stat-bubble-big">${statData.citations || '750+'}</div>
-            <div class="stat-bubble-sub">via Semantic Scholar</div>`;
+            <div class="stat-bubble-big">${statData.citations || '--'}</div>
+            <div class="stat-bubble-sub">via OpenAlex</div>`;
   }
   if (type === 'years') {
     return `<div class="stat-bubble-title"><i class="fas fa-calendar-alt"></i> Years Experience</div>
@@ -1290,11 +1303,59 @@ const KEYWORD_PATTERNS = [
   { pattern: /immune|immunity|immuno/i, label: 'Immunogenomics', icon: 'fa-shield-alt' },
 ];
 
+const PUB_KEYWORD_OVERRIDES = {
+  'comparative analysis of butternut juglans cinerea and japanese walnut juglans ailantifolia chloroplast genomes': {
+    add: ['Genome Assembly'],
+  },
+  'a multifaceted approach to identify disease response genes in the endangered massasauga rattlesnake': {
+    add: ['Immunogenomics'],
+  },
+  'genomic evaluation of assisted gene flow options in an endangered rattlesnake': {
+    add: ['Pop. Genomics'],
+  },
+  'genetic approaches reveal a healthy population and an unexpectedly recent origin for an isolated desert spring fish': {
+    add: ['Pop. Genomics'],
+  },
+  'genetic mechanisms and biological processes underlying host response to ophidiomycosis snake fungal disease inferred from tissue specific transcriptome analyses': {
+    add: ['Immunogenomics'],
+  },
+  'functional genomic diversity is correlated with neutral genomic diversity in populations of an endangered rattlesnake': {
+    add: ['Pop. Genomics'],
+  },
+  'the first complete chloroplast genome sequence and phylogenetic analysis of pistachio pistacia vera': {
+    add: ['Genome Assembly'],
+  },
+  'microsatellite borders and micro sequence conservation in juglans': {
+    remove: ['Conservation'],
+  },
+};
+
+function normalizePubTitle(title = '') {
+  return title
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
 function extractKeywords(pub) {
   const text = `${pub.title} ${pub.journal}`;
   const kws = [];
   for (const { pattern, label } of KEYWORD_PATTERNS) {
     if (pattern.test(text) && !kws.includes(label)) kws.push(label);
+  }
+  const override = PUB_KEYWORD_OVERRIDES[normalizePubTitle(pub.title)];
+  if (override?.remove) {
+    override.remove.forEach(label => {
+      const idx = kws.indexOf(label);
+      if (idx !== -1) kws.splice(idx, 1);
+    });
+  }
+  if (override?.add) {
+    override.add.forEach(label => {
+      if (!kws.includes(label)) kws.push(label);
+    });
   }
   return kws;
 }
@@ -1527,7 +1588,7 @@ function renderPublications(pubs, citations) {
 
 async function fetchPublications() {
   const pubLoading = document.getElementById('pubLoading');
-  const cachedCitations = cacheGet('s2_citations');
+  const cachedCitations = cacheGet('openalex_citations');
 
   try {
     const res = await fetch(ORCID_API, { headers: { 'Accept': 'application/json' } });
@@ -1539,8 +1600,8 @@ async function fetchPublications() {
     if (!cachedCitations) {
       fetchAllCitations(pubs.filter(p => p.doi));
     } else {
-      showCacheInfo('pubCacheInfo', ['s2_citations'], () => {
-        cacheInvalidate('s2_citations');
+      showCacheInfo('pubCacheInfo', ['openalex_citations'], () => {
+        cacheInvalidate('openalex_citations');
         fetchAllCitations(pubs.filter(p => p.doi));
       });
     }
@@ -1551,7 +1612,7 @@ async function fetchPublications() {
 }
 
 async function fetchAllCitations(pubs) {
-  const cached = cacheGet('s2_citations');
+  const cached = cacheGet('openalex_citations');
   if (cached) {
     let total = 0;
     for (const pub of pubs) {
@@ -1573,10 +1634,10 @@ async function fetchAllCitations(pubs) {
   for (const pub of pubs) {
     try {
       await delay(150);
-      const res = await fetch(`${S2_API}${pub.doi}?fields=citationCount`);
+      const res = await fetch(`${OPENALEX_WORKS_API}https://doi.org/${pub.doi}?select=cited_by_count`);
       if (!res.ok) { citations[pub.doi] = 0; continue; }
       const data = await res.json();
-      const count = data.citationCount || 0;
+      const count = data.cited_by_count || 0;
       citations[pub.doi] = count;
       totalCitations += count;
       const badge = document.querySelector(`.citation-badge[data-doi="${pub.doi}"]`);
@@ -1588,12 +1649,12 @@ async function fetchAllCitations(pubs) {
     }
   }
 
-  cacheSet('s2_citations', citations);
+  cacheSet('openalex_citations', citations);
   statData.citations = totalCitations;
   animateNumber('statCitations', totalCitations);
   document.getElementById('citCountBadge').querySelector('span').textContent = totalCitations;
-  showCacheInfo('pubCacheInfo', ['s2_citations'], () => {
-    cacheInvalidate('s2_citations');
+  showCacheInfo('pubCacheInfo', ['openalex_citations'], () => {
+    cacheInvalidate('openalex_citations');
     const el = document.getElementById('pubCacheInfo');
     if (el) el.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing citations...';
     fetchAllCitations(pubs);
@@ -1735,11 +1796,24 @@ const GH_USER = 'samarth8392';
 const GH_LAB = 'ccbr';
 const GH_LAB_API = `https://api.github.com/orgs/${GH_LAB}/repos?sort=updated&per_page=100`;
 const GH_USER_API = `https://api.github.com/users/${GH_USER}/repos?sort=updated&per_page=100`;
-// CCBR repos where @samarth8392 has contributed
-const GH_MY_LAB_REPOS = ['CCBR_GATK4_Exome_Seq_Pipeline', 'CHAMPAGNE', 'CARLISLE', 'XAVIER', 'RENEE', 'ASPEN'];
-// Personal repos to exclude
-const GH_EXCLUDE = ['samarth8392.github.io'];
-const GH_CACHE_KEY = 'gh_samarth8392_repos';
+// Repo visibility config for the Projects & Code section.
+// - `show` acts as an allowlist when you want to feature only specific repos.
+// - `hide` removes repos even if they were fetched successfully.
+// Leave `show` empty to allow all fetched repos through.
+const GH_REPO_VISIBILITY = {
+  user: {
+    show: ['hybrid_genomics','CircONTrack','atari','FGDvNGD','SFDTranscriptomics','MQU_PopGenomics',
+      'MQU_EvoGenomics'
+    ],
+    hide: ['samarth8392.github.io','tumeresamnay','wedding-site'],
+  },
+  lab: {
+    show: ['XAVIER','RENEE'],
+    hide: ['CHAMPAGNE', 'CARLISLE',  'ASPEN','CCBR_GATK4_Exome_Seq_Pipeline'],
+  },
+};
+const GH_LAB_FALLBACK_REPOS = GH_REPO_VISIBILITY.lab.show;
+const GH_CACHE_KEY = 'gh_samarth8392_repos_v2';
 
 const LANG_COLORS = {
   Python: '#3572A5', R: '#198CE7', HTML: '#E34C26',
@@ -1751,6 +1825,29 @@ const LANG_COLORS = {
 
 let ghAllRepos = [];
 let ghFilterLang = 'all';
+
+function getRepoVisibilitySet(names = []) {
+  return new Set(names.map(name => name.toLowerCase()));
+}
+
+function isRepoVisible(repo, visibility = {}) {
+  const repoName = repo.name.toLowerCase();
+  const showSet = getRepoVisibilitySet(visibility.show);
+  const hideSet = getRepoVisibilitySet(visibility.hide);
+
+  if (hideSet.has(repoName)) return false;
+  if (showSet.size > 0) return showSet.has(repoName);
+  return true;
+}
+
+function applyRepoVisibility(repos = []) {
+  return repos.filter(repo => {
+    const owner = repo.owner?.login?.toLowerCase();
+    if (owner === GH_LAB.toLowerCase()) return isRepoVisible(repo, GH_REPO_VISIBILITY.lab);
+    if (owner === GH_USER.toLowerCase()) return isRepoVisible(repo, GH_REPO_VISIBILITY.user);
+    return true;
+  });
+}
 
 function renderGitHubRepos(repos) {
   const grid = document.getElementById('ghGrid');
@@ -1902,14 +1999,12 @@ async function fetchGitHubRepos() {
 
   const cached = cacheGet(GH_CACHE_KEY);
   if (cached) {
-    renderGitHubRepos(cached);
+    renderGitHubRepos(applyRepoVisibility(cached));
     showCacheInfo('ghCacheInfo', [GH_CACHE_KEY], fetchGitHubRepos);
     return;
   }
 
   try {
-    const labSet = new Set(GH_MY_LAB_REPOS.map(n => n.toLowerCase()));
-    const excludeSet = new Set(GH_EXCLUDE.map(n => n.toLowerCase()));
     let labRepos = [];
     let userRepos = [];
 
@@ -1918,21 +2013,23 @@ async function fetchGitHubRepos() {
       const res = await fetch(GH_LAB_API);
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data)) labRepos = data.filter(r => !r.fork && !r.archived && labSet.has(r.name.toLowerCase()));
+        if (Array.isArray(data)) {
+          labRepos = data.filter(r => !r.fork && !r.archived && isRepoVisible(r, GH_REPO_VISIBILITY.lab));
+        }
       }
     } catch { /* fall through */ }
 
     // Fallback for lab repos: fetch individually
     if (labRepos.length === 0) {
       const results = await Promise.all(
-        GH_MY_LAB_REPOS.map(name =>
+        GH_LAB_FALLBACK_REPOS.map(name =>
           fetch(`https://api.github.com/repos/${GH_LAB}/${name}`).catch(() => null)
         )
       );
       for (const res of results) {
         if (res && res.ok) {
           const repo = await res.json();
-          if (repo && repo.name) labRepos.push(repo);
+          if (repo && repo.name && isRepoVisible(repo, GH_REPO_VISIBILITY.lab)) labRepos.push(repo);
         }
       }
     }
@@ -1942,7 +2039,9 @@ async function fetchGitHubRepos() {
       const res = await fetch(GH_USER_API);
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data)) userRepos = data.filter(r => !r.fork && !r.archived && !excludeSet.has(r.name.toLowerCase()));
+        if (Array.isArray(data)) {
+          userRepos = data.filter(r => !r.fork && !r.archived && isRepoVisible(r, GH_REPO_VISIBILITY.user));
+        }
       }
     } catch { /* ignore */ }
 
@@ -1956,7 +2055,7 @@ async function fetchGitHubRepos() {
 
     if (repos.length === 0) throw new Error('No repos loaded');
 
-    const sorted = repos.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+    const sorted = applyRepoVisibility(repos).sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
     cacheSet(GH_CACHE_KEY, sorted);
     renderGitHubRepos(sorted);
     showCacheInfo('ghCacheInfo', [GH_CACHE_KEY], fetchGitHubRepos);

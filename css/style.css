@@ -293,6 +293,9 @@ img { max-width: 100%; height: auto; }
   align-items: center;
   gap: 0.75rem;
   flex-shrink: 0;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .nav-logo-img {
@@ -2195,6 +2198,31 @@ img { max-width: 100%; height: auto; }
 }
 .contact-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
 
+.award-card {
+  position: relative;
+  padding-top: 4.15rem;
+}
+
+.award-year {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  padding: 0.32rem 0.72rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  box-shadow: 0 8px 18px rgba(217,119,87,0.18);
+}
+
 .contact-icon {
   width: 48px; height: 48px;
   display: flex;
@@ -2430,6 +2458,7 @@ img { max-width: 100%; height: auto; }
 [data-theme="dark"] .contact-card { background: rgba(17,17,24,0.75); }
 [data-theme="dark"] .contact-card:hover { box-shadow: var(--shadow), 0 0 16px rgba(255,140,90,0.04); }
 [data-theme="dark"] .contact-icon { box-shadow: 0 0 12px rgba(255,140,90,0.08); }
+[data-theme="dark"] .award-year { box-shadow: 0 0 18px rgba(255,140,90,0.2); }
 
 /* Illustrations dark */
 [data-theme="dark"] .illust-card { background: rgba(17,17,24,0.75); }
